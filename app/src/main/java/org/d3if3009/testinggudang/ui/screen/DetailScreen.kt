@@ -178,6 +178,8 @@ fun ListItem(gudang: Gudang, onClick: () -> Unit ){
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
+//        Text(text = gudang.tanggal)
+        Text(text = gudang.tanggal)
 
     }
 
@@ -204,6 +206,7 @@ fun GridItem(gudang: Gudang, onClick: () -> Unit) {
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold
             )
+            Text(text = gudang.tanggal)
         }
     }
 }

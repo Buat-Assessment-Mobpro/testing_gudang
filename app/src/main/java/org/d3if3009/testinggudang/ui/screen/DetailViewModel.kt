@@ -6,11 +6,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.d3if3009.testinggudang.database.GudangDao
 import org.d3if3009.testinggudang.model.Gudang
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DetailViewModel (private val dao: GudangDao): ViewModel() {
+    private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+
 
     fun insert(barang:String){
         val gudang = Gudang (
+            tanggal = formatter.format(Date()),
             barang = barang
 
         )
@@ -26,7 +32,10 @@ class DetailViewModel (private val dao: GudangDao): ViewModel() {
     fun  update(id: Long, barang: String){
         val gudang = Gudang(
             id = id,
+            tanggal = formatter.format(Date()),
             barang = barang
+
+
         )
         viewModelScope.launch (Dispatchers.IO){
             dao.update(gudang)

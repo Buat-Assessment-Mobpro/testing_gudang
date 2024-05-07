@@ -56,6 +56,7 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
 
     var barang by remember { mutableStateOf("") }
 
+
     var showDialog by remember { mutableStateOf(false) }
 
 

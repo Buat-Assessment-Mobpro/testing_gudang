@@ -17,7 +17,7 @@ interface GudangDao {
     suspend fun update(gudang: Gudang)
 
 //    @Query("SELECT * FROM gudang ORDER By kelas,nim ASC")
-    @Query("SELECT * FROM gudang ORDER By barang ASC")
+    @Query("SELECT * FROM gudang ORDER By tanggal DESC")
     fun getGudang(): Flow<List<Gudang>>
 
     @Query("SELECT * FROM gudang WHERE id = :id")
