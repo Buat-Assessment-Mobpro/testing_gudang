@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -46,13 +47,13 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.d3if3009.testinggudang.R
+import org.d3if3009.testinggudang.database.MahasiswaDb
+import org.d3if3009.testinggudang.model.Mahasiswa
+import org.d3if3009.testinggudang.ui.theme.TestingGudangTheme
 import org.d3if3009.testinggudang.navigation.Screen
 import org.d3if3009.testinggudang.util.SettingsDataStore
 import org.d3if3009.testinggudang.util.ViewModelFactory
-import org.d3if3009.testinggudang.R
-import org.d3if3009.testinggudang.database.GudangDb
-import org.d3if3009.testinggudang.model.Gudang
-import org.d3if3009.testinggudang.ui.theme.TestingGudangTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +114,7 @@ fun MainScreen(navController: NavHostController) {
 @Composable
 fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
-    val db = GudangDb.getInstance(context)
+    val db = MahasiswaDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
     val viewModel: MainViewModel = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
@@ -139,7 +140,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
                 contentPadding = PaddingValues(bottom = 84.dp)
             ) {
                 items(data) {
-                    ListItem(gudang = it) {
+                    ListItem(mahasiswa = it) {
                         navController.navigate(Screen.FormUbah.withId(it.id))
                     }
                 }
@@ -154,7 +155,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp)
             ) {
                 items(data) {
-                    GridItem(gudang = it) {
+                    GridItem(mahasiswa = it) {
                         navController.navigate(Screen.FormUbah.withId(it.id))
                     }
                 }
@@ -164,7 +165,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
 }
 
 @Composable
-fun ListItem(gudang: Gudang, onClick: () -> Unit ){
+fun ListItem(mahasiswa: Mahasiswa, onClick: () -> Unit ){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -173,20 +174,27 @@ fun ListItem(gudang: Gudang, onClick: () -> Unit ){
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = gudang.barang,
+            text = mahasiswa.nama,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
-//        Text(text = gudang.tanggal)
-        Text(text = gudang.tanggal)
+        Text(
+            text = mahasiswa.stok,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = mahasiswa.kelas,
+        )
 
     }
+    Divider()
 
 }
 
 @Composable
-fun GridItem(gudang: Gudang, onClick: () -> Unit) {
+fun GridItem(mahasiswa: Mahasiswa, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -201,13 +209,19 @@ fun GridItem(gudang: Gudang, onClick: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
-                text = gudang.barang,
+                text = mahasiswa.nama,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold
             )
-            Text(text = gudang.tanggal)
+            Text(
+                text = mahasiswa.stok,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(text = mahasiswa.kelas)
         }
+
     }
 }
 

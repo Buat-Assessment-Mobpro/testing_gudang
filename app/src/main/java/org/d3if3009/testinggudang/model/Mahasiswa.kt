@@ -2,14 +2,13 @@ package org.d3if3009.testinggudang.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
-@Entity(tableName = "gudang")
-data class Gudang(
+@Entity(tableName = "mahasiswa")
+data class Mahasiswa(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val tanggal: String,
-    val barang: String
-
+    val nama: String,
+    val stok: String,
+    val kelas: String
 
 )

@@ -2,11 +2,15 @@ package org.d3if3009.testinggudang.ui.screen
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -28,43 +33,58 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3009.testinggudang.R
-import org.d3if3009.testinggudang.database.GudangDb
+import org.d3if3009.testinggudang.database.MahasiswaDb
 import org.d3if3009.testinggudang.ui.theme.TestingGudangTheme
 import org.d3if3009.testinggudang.util.ViewModelFactory
 
-const val KEY_ID_GUDANG = "idGudang"
+const val KEY_ID_MAHASISWA = "idMahasiswa"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(navController: NavHostController,id: Long?= null) {
     val context = LocalContext.current
-    val db = GudangDb.getInstance(context)
+    val db = MahasiswaDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
-    var barang by remember { mutableStateOf("") }
-
+    var nama by remember { mutableStateOf("") }
+    var stok by remember { mutableStateOf("") }
 
     var showDialog by remember { mutableStateOf(false) }
 
 
+    val radioOptions = listOf(
+        stringResource(id = R.string.yamaha),
+        stringResource(id = R.string.honda),
+        stringResource(id = R.string.suzuki),
+        stringResource(id = R.string.kawasaki),
+        stringResource(id = R.string.vespa)
+    )
+
+    var selectedKelas by rememberSaveable { mutableStateOf(radioOptions[0]) }
+
     LaunchedEffect(true) {
         if (id == null) return@LaunchedEffect
-        val data = viewModel.getGudang(id) ?: return@LaunchedEffect
-        barang = data.barang
-
+        val data = viewModel.getMahasiswa(id) ?: return@LaunchedEffect
+        nama = data.nama
+        stok = data.stok
+        selectedKelas = data.kelas
     }
     Scaffold (
         topBar = {
@@ -91,14 +111,14 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
                 ),
                 actions = {
                     IconButton(onClick = {
-                        if (barang == ""){
+                        if (nama =="" || stok == "" ){
                             Toast.makeText(context,R.string.invalid, Toast.LENGTH_LONG).show()
                             return@IconButton
                         }
                         if (id == null){
-                            viewModel.insert(barang)
+                            viewModel.insert(nama,stok, selectedKelas)
                         } else{
-                            viewModel.update(id,barang)
+                            viewModel.update(id,nama,stok, selectedKelas)
                         }
                         navController.popBackStack()
                     }) {
@@ -123,9 +143,14 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
             )
         }
     ) { padding ->
-        FormGudang(
-            title = barang,
-            onTitleChange = {barang = it} ,
+        FormMahasiswa(
+            title = nama,
+            onTitleChange = {nama = it} ,
+            desc = stok,
+            onDescChange = {stok = it},
+            pilihanKelas = selectedKelas,
+            kelasBerubah = {selectedKelas = it},
+            radioOpsi = radioOptions,
             modifier = Modifier.padding(padding)
         )
 //        ScreenContent(Modifier.padding(padding))
@@ -157,10 +182,17 @@ fun DeleteAction(delete:()->Unit ){
 }
 
 @Composable
-fun FormGudang(
+fun FormMahasiswa(
+
     title:String,onTitleChange:(String)-> Unit,
+    desc:String,onDescChange:(String)->Unit,
+    pilihanKelas: String,kelasBerubah:(String)->Unit,
+    radioOpsi:List<String>,
     modifier: Modifier
 ){
+
+
+
     Column(
         modifier= modifier
             .fillMaxSize()
@@ -178,6 +210,53 @@ fun FormGudang(
                 imeAction = ImeAction.Next
             ),
             modifier=Modifier.fillMaxWidth()
+        )
+        //nim mahasiswa
+        OutlinedTextField(
+            value = desc,
+            onValueChange = {onDescChange(it)},
+            singleLine = true,
+            label = { Text(text = stringResource(id = R.string.stok))},
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            modifier=Modifier.fillMaxWidth()
+        )
+        //RadioOption kelas
+        Column(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+        ){
+            radioOpsi.forEach { text -> KelasOption(
+                label = text, isSelected = pilihanKelas == text, modifier = Modifier
+                    .selectable(
+                        selected = pilihanKelas == text,
+                        onClick = { kelasBerubah(text) },
+                        role = Role.RadioButton
+                    )
+
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun KelasOption (label:String, isSelected: Boolean, modifier: Modifier ){
+    Row (
+        modifier = modifier,
+
+        ){
+        RadioButton(selected = isSelected, onClick = null)
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 8.dp)
         )
     }
 }

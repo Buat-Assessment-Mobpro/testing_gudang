@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import org.d3if3009.testinggudang.navigation.SetupNavGraph
 import org.d3if3009.testinggudang.ui.theme.TestingGudangTheme
+import org.d3if3009.testinggudang.navigation.SetupNavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

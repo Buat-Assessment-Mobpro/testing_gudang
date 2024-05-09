@@ -4,41 +4,35 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.d3if3009.testinggudang.database.GudangDao
-import org.d3if3009.testinggudang.model.Gudang
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import org.d3if3009.testinggudang.database.MahasiswaDao
+import org.d3if3009.testinggudang.model.Mahasiswa
 
-class DetailViewModel (private val dao: GudangDao): ViewModel() {
-    private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+class DetailViewModel (private val dao: MahasiswaDao): ViewModel() {
 
-
-    fun insert(barang:String){
-        val gudang = Gudang (
-            tanggal = formatter.format(Date()),
-            barang = barang
-
+    fun insert(nama:String, stok:String, kelas: String){
+        val mahasiswa = Mahasiswa (
+            nama = nama,
+            stok = stok,
+            kelas = kelas
         )
         viewModelScope.launch (Dispatchers.IO){
-            dao.insert(gudang)
+            dao.insert(mahasiswa)
         }
     }
 
-    suspend fun getGudang(id:Long): Gudang?{
-        return dao.getGudangById(id)
+    suspend fun getMahasiswa(id:Long): Mahasiswa?{
+        return dao.getMahasiswaById(id)
     }
 
-    fun  update(id: Long, barang: String){
-        val gudang = Gudang(
+    fun  update(id: Long, nama: String,stok: String,kelas: String){
+        val mahasiswa = Mahasiswa(
             id = id,
-            tanggal = formatter.format(Date()),
-            barang = barang
-
-
+            nama = nama,
+            stok = stok,
+            kelas = kelas
         )
         viewModelScope.launch (Dispatchers.IO){
-            dao.update(gudang)
+            dao.update(mahasiswa)
         }
 
     }
