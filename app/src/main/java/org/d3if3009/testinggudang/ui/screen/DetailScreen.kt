@@ -99,7 +99,7 @@ fun MainScreen(navController: NavHostController) {
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.tambah_barang),
+                    contentDescription = stringResource(id = R.string.tambah_motor),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -185,8 +185,11 @@ fun ListItem(mahasiswa: Mahasiswa, onClick: () -> Unit ){
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            text = mahasiswa.kelas,
+            text = mahasiswa.merek,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
         )
+        Text(text = mahasiswa.tanggal)
 
     }
     Divider()
@@ -219,7 +222,14 @@ fun GridItem(mahasiswa: Mahasiswa, onClick: () -> Unit) {
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
-            Text(text = mahasiswa.kelas)
+            Text(
+                text = mahasiswa.merek,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(text = mahasiswa.tanggal)
+
+
         }
 
     }

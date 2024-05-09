@@ -2,10 +2,10 @@
     <string name="app_name">Gudang Motor</string>
     <string name="list_kosong">Belum ada data</string>
     <string name="x_diklik">%1$s diklik</string>
-    <string name="tambah_barang">Tambah barang</string>
-    <string name="tambah_error">Belum bisa tambah barang</string>
-    <string name="nama">Nama barang</string>
-    <string name="stok">Stok Barang</string>
+    <string name="tambah_motor">Tambah motor</string>
+    <string name="tambah_error">Belum bisa tambah motor</string>
+    <string name="nama">Nama motor</string>
+    <string name="stok">Stok motor</string>
     <string name="kelas">Kelas Mahasiswa</string>
     <string name="yamaha">Yamaha</string>
     <string name="honda">Honda</string>

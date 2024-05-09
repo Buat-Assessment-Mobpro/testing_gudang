@@ -6,14 +6,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.d3if3009.testinggudang.database.MahasiswaDao
 import org.d3if3009.testinggudang.model.Mahasiswa
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DetailViewModel (private val dao: MahasiswaDao): ViewModel() {
+    private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
 
-    fun insert(nama:String, stok:String, kelas: String){
+    fun insert(nama:String, stok:String, merek: String){
         val mahasiswa = Mahasiswa (
             nama = nama,
+            tanggal = formatter.format(Date()),
             stok = stok,
-            kelas = kelas
+            merek = merek
         )
         viewModelScope.launch (Dispatchers.IO){
             dao.insert(mahasiswa)
@@ -24,12 +29,13 @@ class DetailViewModel (private val dao: MahasiswaDao): ViewModel() {
         return dao.getMahasiswaById(id)
     }
 
-    fun  update(id: Long, nama: String,stok: String,kelas: String){
+    fun  update(id: Long, nama: String,stok: String,merek: String){
         val mahasiswa = Mahasiswa(
             id = id,
             nama = nama,
+            tanggal = formatter.format(Date()),
             stok = stok,
-            kelas = kelas
+            merek = merek
         )
         viewModelScope.launch (Dispatchers.IO){
             dao.update(mahasiswa)

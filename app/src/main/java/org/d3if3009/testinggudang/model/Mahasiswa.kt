@@ -8,7 +8,8 @@ data class Mahasiswa(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val nama: String,
+    val tanggal: String,
     val stok: String,
-    val kelas: String
+    val merek: String
 
 )

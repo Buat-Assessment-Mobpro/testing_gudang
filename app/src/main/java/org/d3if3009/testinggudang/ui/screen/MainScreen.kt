@@ -77,14 +77,14 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
         stringResource(id = R.string.vespa)
     )
 
-    var selectedKelas by rememberSaveable { mutableStateOf(radioOptions[0]) }
+    var selectedMerek by rememberSaveable { mutableStateOf(radioOptions[0]) }
 
     LaunchedEffect(true) {
         if (id == null) return@LaunchedEffect
         val data = viewModel.getMahasiswa(id) ?: return@LaunchedEffect
         nama = data.nama
         stok = data.stok
-        selectedKelas = data.kelas
+        selectedMerek = data.merek
     }
     Scaffold (
         topBar = {
@@ -100,7 +100,7 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
                 },
                 title = {
                     if (id == null)
-                        Text(text = stringResource(id = R.string.tambah_barang))
+                        Text(text = stringResource(id = R.string.tambah_motor))
                     else
                         Text(text = stringResource(id = R.string.edit_barang))
 
@@ -116,9 +116,9 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
                             return@IconButton
                         }
                         if (id == null){
-                            viewModel.insert(nama,stok, selectedKelas)
+                            viewModel.insert(nama,stok, selectedMerek)
                         } else{
-                            viewModel.update(id,nama,stok, selectedKelas)
+                            viewModel.update(id,nama,stok, selectedMerek)
                         }
                         navController.popBackStack()
                     }) {
@@ -148,8 +148,8 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
             onTitleChange = {nama = it} ,
             desc = stok,
             onDescChange = {stok = it},
-            pilihanKelas = selectedKelas,
-            kelasBerubah = {selectedKelas = it},
+            pilihanKelas = selectedMerek,
+            kelasBerubah = {selectedMerek = it},
             radioOpsi = radioOptions,
             modifier = Modifier.padding(padding)
         )
