@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -76,6 +77,7 @@ fun MainScreen(navController: NavHostController) {
                             dataStore.saveLayout(!showList)
                         }
                     }) {
+
                         Icon(
                             painter = painterResource(
                                 if (showList) R.drawable.baseline_grid_view_24
@@ -87,8 +89,11 @@ fun MainScreen(navController: NavHostController) {
                             ),
                             tint = MaterialTheme.colorScheme.primary
                         )
+
                     }
+
                 }
+
             )
         },
         floatingActionButton = {
