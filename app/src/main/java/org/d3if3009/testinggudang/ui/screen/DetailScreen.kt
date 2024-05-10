@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,11 +29,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,8 +55,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.d3if3009.testinggudang.R
-import org.d3if3009.testinggudang.database.MahasiswaDb
-import org.d3if3009.testinggudang.model.Mahasiswa
+import org.d3if3009.testinggudang.database.MotorDb
+import org.d3if3009.testinggudang.model.Motor
 import org.d3if3009.testinggudang.ui.theme.TestingGudangTheme
 import org.d3if3009.testinggudang.navigation.Screen
 import org.d3if3009.testinggudang.util.SettingsDataStore
@@ -61,17 +67,20 @@ import org.d3if3009.testinggudang.util.ViewModelFactory
 fun MainScreen(navController: NavHostController) {
     val dataStore = SettingsDataStore(LocalContext.current)
     val showList by dataStore.layoutFlow.collectAsState(true)
+    val searchQuery = remember { mutableStateOf("") }
 
     Scaffold (
         topBar = {
             TopAppBar(title = {
                 Text(text = (stringResource(id = R.string.app_name)))
+
             },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 actions = {
+
                     IconButton(onClick = {
                         CoroutineScope(Dispatchers.IO).launch {
                             dataStore.saveLayout(!showList)
@@ -89,13 +98,20 @@ fun MainScreen(navController: NavHostController) {
                             ),
                             tint = MaterialTheme.colorScheme.primary
                         )
+//                        Icon(
+//                            imageVector = Icons.Outlined.Info,
+//                            contentDescription = stringResource(id = R.string.tentang_aplikasi),
+//                            tint = MaterialTheme.colorScheme.primary
+//                        )
 
                     }
+
 
                 }
 
             )
         },
+
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -116,10 +132,12 @@ fun MainScreen(navController: NavHostController) {
 
 }
 
+
+
 @Composable
 fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
-    val db = MahasiswaDb.getInstance(context)
+    val db = MotorDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
     val viewModel: MainViewModel = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
@@ -145,7 +163,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
                 contentPadding = PaddingValues(bottom = 84.dp)
             ) {
                 items(data) {
-                    ListItem(mahasiswa = it) {
+                    ListItem(motor = it) {
                         navController.navigate(Screen.FormUbah.withId(it.id))
                     }
                 }
@@ -160,7 +178,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp)
             ) {
                 items(data) {
-                    GridItem(mahasiswa = it) {
+                    GridItem(motor = it) {
                         navController.navigate(Screen.FormUbah.withId(it.id))
                     }
                 }
@@ -170,7 +188,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
 }
 
 @Composable
-fun ListItem(mahasiswa: Mahasiswa, onClick: () -> Unit ){
+fun ListItem(motor: Motor, onClick: () -> Unit ){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -179,22 +197,22 @@ fun ListItem(mahasiswa: Mahasiswa, onClick: () -> Unit ){
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = mahasiswa.nama,
+            text = motor.nama,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = mahasiswa.stok,
+            text = motor.stok,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            text = mahasiswa.merek,
+            text = motor.merek,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
-        Text(text = mahasiswa.tanggal)
+        Text(text = motor.tanggal)
 
     }
     Divider()
@@ -202,7 +220,7 @@ fun ListItem(mahasiswa: Mahasiswa, onClick: () -> Unit ){
 }
 
 @Composable
-fun GridItem(mahasiswa: Mahasiswa, onClick: () -> Unit) {
+fun GridItem(motor: Motor, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -217,22 +235,22 @@ fun GridItem(mahasiswa: Mahasiswa, onClick: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
-                text = mahasiswa.nama,
+                text = motor.nama,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = mahasiswa.stok,
+                text = motor.stok,
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = mahasiswa.merek,
+                text = motor.merek,
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
             )
-            Text(text = mahasiswa.tanggal)
+            Text(text = motor.tanggal)
 
 
         }

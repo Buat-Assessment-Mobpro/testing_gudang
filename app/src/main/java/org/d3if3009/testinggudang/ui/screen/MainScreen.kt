@@ -49,17 +49,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3009.testinggudang.R
-import org.d3if3009.testinggudang.database.MahasiswaDb
+import org.d3if3009.testinggudang.database.MotorDb
 import org.d3if3009.testinggudang.ui.theme.TestingGudangTheme
 import org.d3if3009.testinggudang.util.ViewModelFactory
 
-const val KEY_ID_MAHASISWA = "idMahasiswa"
+const val KEY_ID_motor = "idmotor"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(navController: NavHostController,id: Long?= null) {
     val context = LocalContext.current
-    val db = MahasiswaDb.getInstance(context)
+    val db = MotorDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
@@ -81,7 +81,7 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
 
     LaunchedEffect(true) {
         if (id == null) return@LaunchedEffect
-        val data = viewModel.getMahasiswa(id) ?: return@LaunchedEffect
+        val data = viewModel.getmotor(id) ?: return@LaunchedEffect
         nama = data.nama
         stok = data.stok
         selectedMerek = data.merek
@@ -143,7 +143,7 @@ fun DetailScreen(navController: NavHostController,id: Long?= null) {
             )
         }
     ) { padding ->
-        FormMahasiswa(
+        Formmotor(
             title = nama,
             onTitleChange = {nama = it} ,
             desc = stok,
@@ -182,7 +182,7 @@ fun DeleteAction(delete:()->Unit ){
 }
 
 @Composable
-fun FormMahasiswa(
+fun Formmotor(
 
     title:String,onTitleChange:(String)-> Unit,
     desc:String,onDescChange:(String)->Unit,
@@ -199,7 +199,7 @@ fun FormMahasiswa(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        //nama mahasiswa
+        //nama motor
         OutlinedTextField(
             value = title,
             onValueChange = {onTitleChange(it)},
@@ -211,7 +211,7 @@ fun FormMahasiswa(
             ),
             modifier=Modifier.fillMaxWidth()
         )
-        //nim mahasiswa
+        //nim motor
         OutlinedTextField(
             value = desc,
             onValueChange = {onDescChange(it)},

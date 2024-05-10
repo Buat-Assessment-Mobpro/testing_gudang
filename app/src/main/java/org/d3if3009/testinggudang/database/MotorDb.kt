@@ -4,26 +4,26 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import org.d3if3009.testinggudang.model.Mahasiswa
+import org.d3if3009.testinggudang.model.Motor
 
-@Database(entities = [Mahasiswa::class], version = 1, exportSchema = false)
-abstract class MahasiswaDb:RoomDatabase() {
+@Database(entities = [Motor::class], version = 1, exportSchema = false)
+abstract class MotorDb:RoomDatabase() {
 
-    abstract val dao: MahasiswaDao
+    abstract val dao: MotorDao
 
     companion object{
         @Volatile
-        private var INSTANCE: MahasiswaDb? = null
+        private var INSTANCE: MotorDb? = null
 
-        fun getInstance(context: Context):MahasiswaDb{
+        fun getInstance(context: Context):MotorDb{
             synchronized(this){
                 var instance = INSTANCE
 
                 if (instance == null){
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        MahasiswaDb::class.java,
-                        "mahasiswa.db"
+                        MotorDb::class.java,
+                        "motor.db"
                     ).build()
                     INSTANCE = instance
                 }

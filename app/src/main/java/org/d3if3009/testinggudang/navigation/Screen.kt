@@ -1,6 +1,6 @@
 package org.d3if3009.testinggudang.navigation
 
-import org.d3if3009.testinggudang.ui.screen.KEY_ID_MAHASISWA
+import org.d3if3009.testinggudang.ui.screen.KEY_ID_motor
 
 sealed class Screen (val route: String) {
     data object  Home: Screen("mainScreen")
@@ -8,7 +8,7 @@ sealed class Screen (val route: String) {
 
     data object  About: Screen ("aboutScreen")
 
-    data object FormUbah: Screen("detailScreen/{$KEY_ID_MAHASISWA}") {
+    data object FormUbah: Screen("detailScreen/{$KEY_ID_motor}") {
         fun withId(id: Long) = "detailScreen/$id"
     }
 }
