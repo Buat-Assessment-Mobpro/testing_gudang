@@ -11,6 +11,7 @@ import org.d3if3009.testinggudang.ui.screen.AboutScreen
 import org.d3if3009.testinggudang.ui.screen.DetailScreen
 import org.d3if3009.testinggudang.ui.screen.KEY_ID_motor
 import org.d3if3009.testinggudang.ui.screen.MainScreen
+import org.d3if3009.testinggudang.ui.screen.PersonScreen
 
 @Composable
 fun  SetupNavGraph(navController: NavHostController = rememberNavController()){
@@ -26,6 +27,9 @@ fun  SetupNavGraph(navController: NavHostController = rememberNavController()){
         }
         composable(route = Screen.About.route)   {
             AboutScreen(navController)
+        }
+        composable(route = Screen.Person.route)   {
+            PersonScreen(navController)
         }
         composable(route = Screen.FormUbah.route,
             arguments = listOf(

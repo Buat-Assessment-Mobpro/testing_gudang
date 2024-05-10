@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,20 +16,23 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -111,20 +113,32 @@ fun MainScreen(navController: NavHostController) {
 
             )
         },
+        bottomBar = {
+            BottomAppBar(
+                actions = {
+                    IconButton(onClick = { navController.navigate(Screen.About.route) }) {
+                        Icon(Icons.Filled.Info, contentDescription = "Localized description")
+                    }
+                    IconButton(onClick = { navController.navigate(Screen.Person.route) }) {
+                        Icon(
+                            Icons.Filled.Person,
+                            contentDescription = "Localized description",
+                        )
+                    }
 
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.FormBaru.route)
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { navController.navigate(Screen.FormBaru.route) },
+                        containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                    ) {
+                        Icon(Icons.Filled.Add, "Localized description")
+                    }
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.tambah_motor),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
+            )
+        },
+
 
     ) { padding ->
         ScreenContent(showList, Modifier.padding(padding), navController)
@@ -257,6 +271,10 @@ fun GridItem(motor: Motor, onClick: () -> Unit) {
 
     }
 }
+
+
+
+
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
